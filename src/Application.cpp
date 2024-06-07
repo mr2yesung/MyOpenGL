@@ -5,6 +5,8 @@
 #include <sstream>
 #include <string>
 
+#include <cmath>
+
 struct ShaderSources
 {
     std::string VertexSource;
@@ -99,6 +101,10 @@ int main(void)
     if (!glfwInit())
         return -1;
 
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
     /* Create a windowed mode window and its OpenGL context */
     window = glfwCreateWindow(1600, 900, "My OpenGL", NULL, NULL);
     if (!window)
@@ -109,6 +115,8 @@ int main(void)
 
     /* Make the window's context current */
     glfwMakeContextCurrent(window);
+
+    glfwSwapInterval(1);
 
     /* Initialize GLEW entry points after creating valid OpenGL rendering context */
     if (glewInit() != GLEW_OK)
@@ -123,6 +131,16 @@ int main(void)
         0.5f, -0.5f
     };
 
+    unsigned int indices[6] = {
+        0, 1, 2,
+        2, 3, 0
+    };
+
+    unsigned int vertexArrayObject;
+
+    glGenVertexArrays(1, &vertexArrayObject);
+    glBindVertexArray(vertexArrayObject);
+
     unsigned int buffer;
 
     glGenBuffers(1, &buffer);
@@ -132,11 +150,24 @@ int main(void)
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
 
+    unsigned int indexBufferObject;
+    glGenBuffers(1, &indexBufferObject);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferObject);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+
     ShaderSources sources = ParseShader("resources/shaders/Basic.shader");
-    std::cout << sources.VertexSource << std::endl << sources.FragmentSource << std::endl;
 
     unsigned int shader = CreateShader(sources.VertexSource, sources.FragmentSource);
     glUseProgram(shader);
+
+    int location = glGetUniformLocation(shader, "uColor");
+
+    glBindVertexArray(0);
+    glUseProgram(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+    float theta = 0.0f;
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -144,8 +175,16 @@ int main(void)
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // Render Square
-        glDrawArrays(GL_QUADS, 0, 4);
+        glUseProgram(shader);
+        glUniform4f(location, 0.5f + sin(theta) / 2, 0.5f, 0.5f, 1.0f);
+
+        glBindVertexArray(vertexArrayObject);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferObject);
+
+        // Render Square with index buffer
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+
+        theta += 0.05f;
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
