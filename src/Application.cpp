@@ -9,8 +9,6 @@
 #include "VertexArray.h"
 #include "Shader.h"
 
-#include <cmath>
-
 /* https://www.glfw.org/documentation.html */
 int main(void)
 {
@@ -42,12 +40,15 @@ int main(void)
         std::cout << "Error GLEW" << std::endl;
 
     std::cout << glGetString(GL_VERSION) << std::endl;
+
+    // glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
     {
-        float positions[8] = {
-            -0.5f, -0.5f,
-            -0.5f, 0.5f,
-            0.5f, 0.5f,
-            0.5f, -0.5f
+        float vertex[20] = {
+            -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
+            -0.5f, 0.5f, 0.0f, 1.0f, 0.0f,
+            0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+            0.5f, -0.5f, 1.0f, 1.0f, 0.0f
         };
 
         unsigned int indices[6] = {
@@ -56,16 +57,16 @@ int main(void)
         };
 
         VertexArray va;
-        VertexBuffer vb(positions, 8 * sizeof(float));
+        VertexBuffer vb(vertex, 20 * sizeof(float));
 
         VertexBufferLayout layout;
         layout.Push(2, GL_FLOAT, GL_FALSE);
+        layout.Push(3, GL_FLOAT, GL_FALSE);
         va.AddBuffer(vb, layout);
 
         IndexBuffer ib(indices, 6);
 
-        Shader shader("resources/shaders/Basic.shader");
-        shader.Bind();
+        Shader shader("resources/shaders/ColorAttribute.shader");
 
         va.Unbind();
         shader.Unbind();
@@ -74,7 +75,6 @@ int main(void)
 
         Renderer renderer;
 
-        float theta = 0.0f;
 
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window))
@@ -83,11 +83,11 @@ int main(void)
             renderer.Clear();
 
             shader.Bind();
-            shader.SetUniform4f("uColor", 0.5f + sin(theta) / 2, 0.5f, 0.5f, 1.0f);
 
             renderer.Draw(va, ib);
 
-            theta += 0.05f;
+            va.Unbind();
+            ib.Unbind();
 
             /* Swap front and back buffers */
             glfwSwapBuffers(window);
@@ -100,3 +100,10 @@ int main(void)
 
     return 0;
 }
+
+/*
+void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+glViewport(0, 0, width, height);
+}
+*/

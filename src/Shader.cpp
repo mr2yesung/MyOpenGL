@@ -12,6 +12,8 @@ Shader::Shader(const std::string& filePath)
     ShaderSources sources = ParseShader(filePath);
 
     shader = CreateShader(sources.VertexSource, sources.FragmentSource);
+
+    Bind();
 }
 
 Shader::~Shader()
