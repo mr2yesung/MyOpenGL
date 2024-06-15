@@ -1,5 +1,5 @@
 #include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#include "Window.h"
 
 #include <iostream>
 
@@ -9,37 +9,17 @@
 #include "VertexArray.h"
 #include "Shader.h"
 
-#include <glm.hpp>
-#include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
 
-void framebufferSizeCallback(GLFWwindow* window, int width, int height);
+const unsigned int SCREENHEIGHT = 900;
+const unsigned int SCREENWIDTH = 900;
 
-/* https://www.glfw.org/documentation.html */
 int main(void)
 {
-    GLFWwindow* window;
+    Window window(SCREENHEIGHT, SCREENWIDTH, "My OpenGL");
 
-    /* Initialize the library */
-    if (!glfwInit())
+    if (window.Init())
         return -1;
-
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(900, 900, "My OpenGL", NULL, NULL);
-    if (!window)
-    {
-        glfwTerminate();
-        return -1;
-    }
-
-    /* Make the window's context current */
-    glfwMakeContextCurrent(window);
-
-    glfwSwapInterval(1);
 
     /* Initialize GLEW entry points after creating valid OpenGL rendering context */
     if (glewInit() != GLEW_OK)
@@ -47,67 +27,78 @@ int main(void)
 
     std::cout << glGetString(GL_VERSION) << std::endl;
 
-    glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
+    
+    const float vertex[24] = {
+        -0.5f, -0.5f, -0.5f,
+        0.5f, -0.5f, -0.5f,
+        0.5f,  0.5f, -0.5f,
+        -0.5f,  0.5f, -0.5f,
+        -0.5f, -0.5f,  0.5f,
+        0.5f, -0.5f,  0.5f,
+        0.5f,  0.5f,  0.5f,
+        -0.5f,  0.5f,  0.5f
+    };
 
+    const unsigned int indices[36] = {
+        // Front face
+        0, 1, 2,
+        2, 3, 0,
+        // Back face
+        4, 5, 6,
+        6, 7, 4,
+        // Left face
+        0, 3, 7,
+        7, 4, 0,
+        // Right face
+        1, 5, 6,
+        6, 2, 1,
+        // Top face
+        3, 2, 6,
+        6, 7, 3,
+        // Bottom face
+        0, 1, 5,
+        5, 4, 0
+    };
+
+    const VertexArray va;
+    const VertexBuffer vb(vertex, 24 * sizeof(float));
+
+    VertexBufferLayout layout;
+    layout.Push(3, GL_FLOAT, GL_FALSE);
+    va.AddBuffer(vb, layout);
+
+    const IndexBuffer ib(indices, 36);
+
+    Shader shader("resources/shaders/CameraView.shader");
+
+    va.Unbind();
+    shader.Unbind();
+    vb.Unbind();
+    ib.Unbind();
+
+    const Renderer renderer;
+
+    /* Loop until the user closes the window */
+    while (!window.GetWindowCloseFlag())
     {
-        const float vertex[12] = {
-            -0.5f, -0.5f, 0.0f,
-            -0.5f, 0.5f, 0.0f,
-            0.5f, 0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f
-        };
+        /* Render here */
+        renderer.Clear();
 
-        const unsigned int indices[6] = {
-            0, 1, 2,
-            2, 3, 0
-        };
+        shader.Bind();
 
-        const VertexArray va;
-        const VertexBuffer vb(vertex, 12 * sizeof(float));
+        shader.SetUniformMatrix4fv("projection", GL_FALSE, glm::value_ptr(window.GetProjectionMatrix()));
 
-        VertexBufferLayout layout;
-        layout.Push(3, GL_FLOAT, GL_FALSE);
-        va.AddBuffer(vb, layout);
+        shader.SetUniformMatrix4fv("view", GL_FALSE, glm::value_ptr(window.GetCamera().GetViewMatrix()));
 
-        const IndexBuffer ib(indices, 6);
-
-        Shader shader("resources/shaders/Basic.shader");
+        renderer.Draw(va, ib);
 
         va.Unbind();
-        shader.Unbind();
-        vb.Unbind();
         ib.Unbind();
 
-        const Renderer renderer;
+        window.SwapBuffers();
 
-        /* Loop until the user closes the window */
-        while (!glfwWindowShouldClose(window))
-        {
-            /* Render here */
-            renderer.Clear();
-
-            shader.Bind();
-
-            shader.SetUniform4f("uColor", 1.0f, 1.0f, 1.0f, 1.0f);
-
-            renderer.Draw(va, ib);
-
-            va.Unbind();
-            ib.Unbind();
-
-            /* Swap front and back buffers */
-            glfwSwapBuffers(window);
-
-            /* Poll for and process events */
-            glfwPollEvents();
-        }
+        window.PollEvents();
     }
-    glfwTerminate();
 
     return 0;
-}
-
-void framebufferSizeCallback(GLFWwindow* window, int width, int height)
-{
-    glViewport(0, 0, width, height);
 }
