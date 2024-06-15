@@ -18,10 +18,10 @@ private:
 public:
 	VertexBufferLayout();
 
-	void Push(unsigned int size, unsigned int type, unsigned char normalized);
+	void Push(const unsigned int size, const unsigned int type, const unsigned char normalized);
 
 	inline const std::vector<VertexBufferLayoutElement>& GetElements() const { return elements; }
-	inline unsigned int GetStride() const { return stride; }
+	inline const unsigned int GetStride() const { return stride; }
 private:
-	unsigned int GetTypeSize(unsigned int type) const;
+	const unsigned int GetTypeSize(const unsigned int type) const;
 };

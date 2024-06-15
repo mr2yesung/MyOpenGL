@@ -8,13 +8,13 @@ VertexBufferLayout::VertexBufferLayout()
 {
 }
 
-void VertexBufferLayout::Push(unsigned int size, unsigned int type, unsigned char normalized)
+void VertexBufferLayout::Push(const unsigned int size, const unsigned int type, const unsigned char normalized)
 {
 	elements.push_back({ size, type, normalized, stride });
 	stride += size * GetTypeSize(type);
 }
 
-unsigned int VertexBufferLayout::GetTypeSize(unsigned int type) const
+const unsigned int VertexBufferLayout::GetTypeSize(const unsigned int type) const
 {
 	switch (type)
 	{

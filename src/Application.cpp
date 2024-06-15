@@ -9,6 +9,12 @@
 #include "VertexArray.h"
 #include "Shader.h"
 
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
+#include <gtc/type_ptr.hpp>
+
+void framebufferSizeCallback(GLFWwindow* window, int width, int height);
+
 /* https://www.glfw.org/documentation.html */
 int main(void)
 {
@@ -23,7 +29,7 @@ int main(void)
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(1600, 900, "My OpenGL", NULL, NULL);
+    window = glfwCreateWindow(900, 900, "My OpenGL", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -41,40 +47,38 @@ int main(void)
 
     std::cout << glGetString(GL_VERSION) << std::endl;
 
-    // glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
     {
-        float vertex[20] = {
-            -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
-            -0.5f, 0.5f, 0.0f, 1.0f, 0.0f,
-            0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-            0.5f, -0.5f, 1.0f, 1.0f, 0.0f
+        const float vertex[12] = {
+            -0.5f, -0.5f, 0.0f,
+            -0.5f, 0.5f, 0.0f,
+            0.5f, 0.5f, 0.0f,
+            0.5f, -0.5f, 0.0f
         };
 
-        unsigned int indices[6] = {
+        const unsigned int indices[6] = {
             0, 1, 2,
             2, 3, 0
         };
 
-        VertexArray va;
-        VertexBuffer vb(vertex, 20 * sizeof(float));
+        const VertexArray va;
+        const VertexBuffer vb(vertex, 12 * sizeof(float));
 
         VertexBufferLayout layout;
-        layout.Push(2, GL_FLOAT, GL_FALSE);
         layout.Push(3, GL_FLOAT, GL_FALSE);
         va.AddBuffer(vb, layout);
 
-        IndexBuffer ib(indices, 6);
+        const IndexBuffer ib(indices, 6);
 
-        Shader shader("resources/shaders/ColorAttribute.shader");
+        Shader shader("resources/shaders/Basic.shader");
 
         va.Unbind();
         shader.Unbind();
         vb.Unbind();
         ib.Unbind();
 
-        Renderer renderer;
-
+        const Renderer renderer;
 
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window))
@@ -83,6 +87,8 @@ int main(void)
             renderer.Clear();
 
             shader.Bind();
+
+            shader.SetUniform4f("uColor", 1.0f, 1.0f, 1.0f, 1.0f);
 
             renderer.Draw(va, ib);
 
@@ -101,9 +107,7 @@ int main(void)
     return 0;
 }
 
-/*
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+void framebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
-glViewport(0, 0, width, height);
+    glViewport(0, 0, width, height);
 }
-*/

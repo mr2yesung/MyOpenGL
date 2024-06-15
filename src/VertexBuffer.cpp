@@ -2,7 +2,7 @@
 
 #include <GL/glew.h>
 
-VertexBuffer::VertexBuffer(const void* data, unsigned int size)
+VertexBuffer::VertexBuffer(const void* data, const unsigned int size)
 {
     glGenBuffers(1, &buffer);
     Bind();

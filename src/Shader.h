@@ -22,11 +22,12 @@ public:
 	void Unbind() const;
 
 	// TODO: add uniform setters
-	void SetUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
+	void SetUniformMatrix4fv(const std::string& name, const unsigned char transpose, const float* value);
+	void SetUniform4f(const std::string& name, const float v0, const float v1, const float v2, const float v3);
 private:
-	ShaderSources ParseShader(const std::string& filePath);
-	unsigned int CompileShader(unsigned int type, const std::string& source);
-	unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader);
+	const ShaderSources ParseShader(const std::string& filePath) const;
+	const unsigned int CompileShader(const unsigned int type, const std::string& source) const;
+	const unsigned int CreateShader(const std::string& vertexShader, const std::string& fragmentShader) const;
 
-	int GetUniformLocation(const std::string& name);
+	const int GetUniformLocation(const std::string& name);
 };

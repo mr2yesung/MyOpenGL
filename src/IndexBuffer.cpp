@@ -2,7 +2,7 @@
 
 #include <GL/glew.h>
 
-IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count)
+IndexBuffer::IndexBuffer(const unsigned int* data, const unsigned int count)
     :indicesCount(count)
 {
     glGenBuffers(1, &indexBufferObject);
