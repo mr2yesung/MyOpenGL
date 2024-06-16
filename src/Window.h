@@ -37,6 +37,8 @@ public:
 	inline const Camera& GetCamera() const { return camera; }
 
 	inline const glm::mat4 GetProjectionMatrix() const { return glm::perspective(glm::radians(camera.GetCameraZoom()), static_cast<float>(width) / static_cast<float>(height), 0.1f, 100.0f); }
+
+	inline GLFWwindow* GetGLFWWindow() const { return window; }
 private:
 	// screen size callback
 	static void HandleFrameBufferSizeChange(GLFWwindow* window, int width, int height);

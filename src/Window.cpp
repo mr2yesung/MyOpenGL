@@ -46,7 +46,7 @@ const int Window::Init()
     glfwSetMouseButtonCallback(window, &Window::HandleMouseButtonClick);
     glfwSetCursorPosCallback(window, &Window::HandleMouseMove);
     glfwSetScrollCallback(window, &Window::HandleMouseScroll);
-
+    
     return 0;
 }
 

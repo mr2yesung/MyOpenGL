@@ -1,8 +1,11 @@
 # Build results
 [Dd]ebug/
+Release/
+OpenGL/
 
 # Dependencies
 dependencies/
+src/external/
 
 # Binaries
 **/bin/
@@ -16,3 +19,6 @@ Intermediates/
 **.vcxproj.filters
 **.vcxproj.user
 **.csproj
+
+# ImGui files
+imgui.ini

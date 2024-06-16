@@ -11,12 +11,13 @@
 
 #include <gtc/type_ptr.hpp>
 
-const unsigned int SCREENHEIGHT = 900;
-const unsigned int SCREENWIDTH = 900;
+#include "UIRenderer.h"
+
+void ButtonClick();
 
 int main(void)
 {
-    Window window(SCREENHEIGHT, SCREENWIDTH, "My OpenGL");
+    Window window(900, 900, "My OpenGL");
 
     if (window.Init())
         return -1;
@@ -78,6 +79,14 @@ int main(void)
 
     const Renderer renderer;
 
+    UIRenderer uiRenderer(window.GetGLFWWindow());
+
+    UIComponent fileExplorerUI("File Opener", ImVec2(100, 100), ImVec2(250, 75));
+    fileExplorerUI.PushText("Open 3d model file in .obj format");
+    fileExplorerUI.PushButton("Browse", ButtonClick);
+
+    uiRenderer.Push(fileExplorerUI);
+
     /* Loop until the user closes the window */
     while (!window.GetWindowCloseFlag())
     {
@@ -95,10 +104,18 @@ int main(void)
         va.Unbind();
         ib.Unbind();
 
+        uiRenderer.Render();
+
         window.SwapBuffers();
 
         window.PollEvents();
     }
 
     return 0;
+}
+
+void ButtonClick()
+{
+    // open file explorer
+    std::cout << "Open File Explorer" << std::endl;
 }
