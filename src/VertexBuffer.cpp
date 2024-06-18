@@ -11,6 +11,7 @@ VertexBuffer::VertexBuffer(const void* data, const unsigned int size)
 
 VertexBuffer::~VertexBuffer()
 {
+    Unbind();
     glDeleteBuffers(1, &buffer);
 }
 

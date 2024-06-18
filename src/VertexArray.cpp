@@ -9,6 +9,7 @@ VertexArray::VertexArray()
 
 VertexArray::~VertexArray()
 {
+	Unbind();
 	glDeleteVertexArrays(1, &vertexArrayObject);
 }
 
@@ -23,7 +24,7 @@ void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& la
 	{
 		const auto& element = elements[i];
 		glEnableVertexAttribArray(i);
-		glVertexAttribPointer(i, element.size, element.type, element.normalized, layout.GetStride(), (const void*)element.offset);
+		glVertexAttribPointer(i, element.size, GL_FLOAT, element.normalized, layout.GetStride(), (const void*)element.offset);
 	}
 }
 

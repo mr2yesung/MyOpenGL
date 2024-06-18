@@ -51,6 +51,12 @@ const ShaderSources Shader::ParseShader(const std::string& filePath) const
         FRAGMENT = 1
     };
 
+    if (!stream.is_open())
+    {
+        std::cout << "Failed to open file: " << filePath << std::endl;
+        return { "", "" };
+    }
+
     std::string line;
     std::stringstream ss[2];
     ShaderType shaderType = ShaderType::NONE;

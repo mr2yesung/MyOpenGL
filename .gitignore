@@ -22,3 +22,6 @@ Intermediates/
 
 # ImGui files
 imgui.ini
+
+# Unnecessary files
+.idea/
