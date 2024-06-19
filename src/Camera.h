@@ -32,7 +32,7 @@ private:
 	const float rotateSensitivity;
 	const float velocity;
 public:
-	Camera(const glm::vec3& cameraPos = glm::vec3(0.0f, 0.0f, 3.0f), const float cameraYaw = 0.0f, const float cameraPitch = 0.0f);
+	Camera(const glm::vec3& cameraPos = glm::vec3(0.0f, 0.0f, 5.0f), const float cameraYaw = 0.0f, const float cameraPitch = 0.0f);
 
 	inline const glm::mat4 GetViewMatrix() const { return glm::lookAt(cameraPos, cameraPos + cameraDirections.frontVector, cameraDirections.upVector); }
 
