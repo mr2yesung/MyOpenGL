@@ -42,7 +42,7 @@ int main(void)
     UIComponent objExplorerUI("OBJ File Opener", ImVec2(100, 100), ImVec2(250, 75));
     objExplorerUI.PushText("Open 3d model file in .obj format");
     objExplorerUI.PushButton("Browse", [&renderer]() {
-        std::string filePath = FileBrowser::BrowseFiles("obj 3D Models\0*.obj\0", "obj");
+        std::string filePath = FileBrowser::BrowseFiles("obj 3D Models (*.obj)\0*.obj\0", "obj");
         std::vector<float> vertex;
         std::vector<unsigned int> indices;
         if (ModelLoader::LoadObjModel(filePath, vertex, indices))
@@ -54,10 +54,10 @@ int main(void)
     uiRenderer.Push(objExplorerUI);
 
     // png file opener
-    UIComponent pngExplorerUI("PNG File Opener", ImVec2(100, 200), ImVec2(250, 75));
+    UIComponent pngExplorerUI("Texture File Opener", ImVec2(100, 200), ImVec2(250, 75));
     pngExplorerUI.PushText("Open texture file");
     pngExplorerUI.PushButton("Browse", [&texture]() {
-        std::string filePath = FileBrowser::BrowseFiles("png Textures\0*.png\0", "png");
+        std::string filePath = FileBrowser::BrowseFiles("textures (*.png, *.jpg)\0*.png;*.jpg\0", "png");
         texture.LoadTexture(filePath.c_str());
     });
 
