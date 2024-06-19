@@ -20,6 +20,10 @@ This project utilizes OpenGL graphics specification to load and display `.obj` 3
 - Linear Algebra
 - 3D Math
 
+## Texture Files
+
+Texture files used for this project is provided by [learnopengl.com](https://learnopengl.com/img/textures/container.jpg) and [Screaming Brain Studios](https://screamingbrainstudios.itch.io/tiny-texture-pack).
+
 ## Contact
 
 - Name: Yeseong Kim
