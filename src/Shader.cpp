@@ -31,6 +31,11 @@ void Shader::Unbind() const
     glUseProgram(0);
 }
 
+void Shader::SetUniform1i(const std::string& name, int value)
+{
+    glUniform1i(GetUniformLocation(name), value);
+}
+
 void Shader::SetUniformMatrix4fv(const std::string& name, const unsigned char transpose, const float* value)
 {
     glUniformMatrix4fv(GetUniformLocation(name), 1, transpose, value);

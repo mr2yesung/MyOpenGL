@@ -29,7 +29,7 @@ const int Window::Init()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(width, height, "My OpenGL", NULL, NULL);
+    window = glfwCreateWindow(width, height, name, NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -46,6 +46,14 @@ const int Window::Init()
     glfwSetMouseButtonCallback(window, &Window::HandleMouseButtonClick);
     glfwSetCursorPosCallback(window, &Window::HandleMouseMove);
     glfwSetScrollCallback(window, &Window::HandleMouseScroll);
+
+    // blending
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    // depth testing for rendering 3d objects
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
     
     return 0;
 }

@@ -22,6 +22,7 @@ public:
 	void Unbind() const;
 
 	// TODO: add uniform setters
+	void SetUniform1i(const std::string& name, int value);
 	void SetUniformMatrix4fv(const std::string& name, const unsigned char transpose, const float* value);
 	void SetUniform4f(const std::string& name, const float v0, const float v1, const float v2, const float v3);
 private:
